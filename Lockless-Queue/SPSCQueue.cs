@@ -1,4 +1,4 @@
-﻿using LocklessQueue.Debug;
+﻿using LocklessQueues.QDebug;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -59,6 +59,7 @@ namespace LocklessQueues
 
         /// <summary>
         /// Gets a value that indicates whether the <see cref="SPSCQueue{T}"/> is empty.
+        /// Value becomes stale after more enqueue or dequeue operations.
         /// </summary>
         public bool IsEmpty
         {
@@ -72,6 +73,7 @@ namespace LocklessQueues
 
         /// <summary>
         /// Gets the number of elements contained in the <see cref="SPSCQueue{T}"/>.
+        /// Value becomes stale after more enqueue or dequeue operations.
         /// </summary>
         public int Count
         {
@@ -109,7 +111,16 @@ namespace LocklessQueues
 
         void ICollection.CopyTo(Array array, int index)
         {
-            GetEnumerator();
+            if (array is T[] szArray)
+            {
+                CopyTo(szArray, index);
+                return;
+            }
+
+            if (array == null)
+                throw new ArgumentNullException(nameof(array));
+
+            ToArray().CopyTo(array, index);
         }
 
         /// <summary>
@@ -129,7 +140,7 @@ namespace LocklessQueues
         }
 
         /// <summary>
-        /// Tries to enqueue an element in the queue.
+        /// Attempts to add the object at the end of the <see cref="SPSCQueue{T}"/>.
         /// Returns false if the queue is full.
         /// </summary>
         public bool TryEnqueue(T item)
@@ -148,7 +159,7 @@ namespace LocklessQueues
         }
 
         /// <summary>
-        /// Tries to dequeue an item from the queue.
+        /// Attempts to remove and return the object at the beginning of the <see cref="SPSCQueue{T}"/>.
         /// Returns false if the queue is empty.
         /// </summary>
         public bool TryDequeue(out T item)
@@ -163,6 +174,10 @@ namespace LocklessQueues
             }
 
             item = m_items[head];
+
+            // Zero out the slot.
+            m_items[head] = default;
+
             var nextHead = GetNext(head, m_items.Length);
             Volatile.Write(ref m_headAndTail.Head, nextHead);
 
@@ -170,7 +185,7 @@ namespace LocklessQueues
         }
 
         /// <summary>
-        /// Tries to peek an item in the queue.
+        /// Attempts to return an object from the beginning of the <see cref="SPSCQueue{T}"/> without removing it.
         /// Returns false if the queue if empty.
         /// </summary>
         public bool TryPeek(out T item)
@@ -201,6 +216,7 @@ namespace LocklessQueues
 
         /// <summary>
         /// Copies the elements stored in the <see cref="SPSCQueue{T}"/> to a new array.
+        /// Consumer-Threadsafe
         /// </summary>
         public T[] ToArray()
         {
@@ -232,7 +248,8 @@ namespace LocklessQueues
         }
 
         /// <summary>
-        /// Copies the <see cref="SPSCQueue{T}"/> elements to an existing one-dimensional <see cref="Array">Array</see>, starting at the specified array index.
+        /// Copies the <see cref="SPSCQueue{T}"/> elements to an existing <see cref="Array">Array</see>, starting at the specified array index.
+        /// Consumer-Threadsafe
         /// </summary>
         /// <param name="array">The one-dimensional <see cref="Array">Array</see> that is the destination of the elements copied from the
         /// <see cref="SPSCQueue{T}"/>. The <see cref="Array">Array</see> must have zero-based indexing.</param>
@@ -252,7 +269,7 @@ namespace LocklessQueues
             if (count < 0)
                 count += m_items.Length;
 
-            if (index > array.Length + Count)
+            if (index > array.Length + count)
                 throw new ArgumentException("Destination array is not long enough to copy all the items in the collection.Check array index and length.");
 
             if (count <= 0)
@@ -271,6 +288,36 @@ namespace LocklessQueues
                 Array.Copy(m_items, 0, array, index + bufferLength - ihead, numToCopy);
 
             return;
+        }
+
+        /// <summary>
+        /// Removes all objects from the <see cref="SPSCQueue{T}"/>.
+        /// This method is NOT thread-safe!
+        /// </summary>
+        public void Clear()
+        {
+            var head = Volatile.Read(ref m_headAndTail.Head);
+            var tail = Volatile.Read(ref m_headAndTail.Tail);
+
+            var count = tail - head;
+            if (count < 0)
+                count += m_items.Length;
+
+            int numToCopy = count;
+            int bufferLength = m_items.Length;
+            int ihead = head;
+
+            int firstPart = Math.Min(bufferLength - ihead, numToCopy);
+
+            // Clear first part.
+            Array.Clear(m_items, ihead, firstPart);
+            numToCopy -= firstPart;
+
+            // Clear second part.
+            if (numToCopy > 0)
+                Array.Clear(m_items, 0 + bufferLength - ihead, numToCopy);
+
+            m_headAndTail = new HeadAndTail();
         }
 
         public struct Enumerator : IEnumerator<T>, IEnumerator
