@@ -55,6 +55,9 @@ namespace LocklessQueues
 
             m_items = new T[capacity];
             collection.CopyTo(m_items, 0);
+
+            // Increment tail
+            m_headAndTail.Tail += collection.Count;
         }
 
         /// <summary>
@@ -315,7 +318,7 @@ namespace LocklessQueues
 
             // Clear second part.
             if (numToCopy > 0)
-                Array.Clear(m_items, 0 + bufferLength - ihead, numToCopy);
+                Array.Clear(m_items, 0, numToCopy);
 
             m_headAndTail = new HeadAndTail();
         }
