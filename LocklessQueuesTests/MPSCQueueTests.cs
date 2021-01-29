@@ -268,25 +268,5 @@ namespace LocklessQueuesTests
 
             Assert.AreEqual(count, q.Count);
         }
-
-        private struct ComplexType : IEquatable<ComplexType>
-        {
-            ushort num1;
-            ushort num2;
-            ushort num3;
-
-            public ComplexType(ushort num)
-            {
-                num1 = num2 = num3 = num;
-            }
-
-            public bool Equals(ComplexType other)
-            {
-                return
-                    num1 == other.num1 &&
-                    num2 == other.num2 &&
-                    num3 == other.num3;
-            }
-        }
     }
 }

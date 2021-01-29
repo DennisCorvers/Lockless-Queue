@@ -38,7 +38,9 @@ namespace LocklessQueues
         private volatile ConcurrentQueueSegment<T> _tail;
         private volatile ConcurrentQueueSegment<T> _head;
 
+#pragma warning disable IDE0032
         private readonly bool _fixedSize;
+#pragma warning restore IDE0032
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConcurrentQueue{T}"/> class.
@@ -87,14 +89,6 @@ namespace LocklessQueues
 
             _fixedSize = false;
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ConcurrentQueue{T}"/> class.
-        /// </summary>
-        /// <param name="initialCapacity">The initial capacity of the <see cref="ConcurrentQueue{T}"/>.</param>
-        public ConcurrentQueue(int initialCapacity)
-            : this(initialCapacity, false)
-        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConcurrentQueue{T}"/> class.
@@ -358,6 +352,89 @@ namespace LocklessQueues
                     // We raced with enqueues/dequeues and captured an inconsistent picture of the queue.
                     // Spin and try again.
                     spinner.SpinOnce();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets a value that indicates whether the <see cref="ConcurrentQueue{T}"/> has a fixed size or not.
+        /// </summary>
+        public bool IsFixedSize
+        {
+            get => _fixedSize;
+        }
+
+        /// <summary>
+        /// Gets the maximum number of elements that can be currently stored in the <see cref="ConcurrentQueue{T}"/>.
+        /// This number will grow if the <see cref="ConcurrentQueue{T}"/> doesn't have a fixed size.
+        /// </summary>
+        public int Capacity
+        {
+            get
+            {
+                if (IsFixedSize)
+                {
+                    // When the collection has a fixed capacity, it's 
+                    // head and tail are equal. So we can grab the capacity
+                    // from either of these.
+                    return _head.Capacity;
+                }
+                else
+                {
+                    SpinWait spinner = default;
+                    while (true)
+                    {
+                        ConcurrentQueueSegment<T> head = _head;
+                        ConcurrentQueueSegment<T> tail = _tail;
+                        int headHead = Volatile.Read(ref head._headAndTail.Head);
+                        int headTail = Volatile.Read(ref head._headAndTail.Tail);
+
+                        if (head == tail)
+                        {
+                            return head.Capacity;
+                        }
+                        else if (head._nextSegment == tail)
+                        {
+                            int tailHead = Volatile.Read(ref tail._headAndTail.Head);
+                            int tailTail = Volatile.Read(ref tail._headAndTail.Tail);
+                            if (head == _head &&
+                                tail == _tail &&
+                                headHead == Volatile.Read(ref head._headAndTail.Head) &&
+                                headTail == Volatile.Read(ref head._headAndTail.Tail) &&
+                                tailHead == Volatile.Read(ref tail._headAndTail.Head) &&
+                                tailTail == Volatile.Read(ref tail._headAndTail.Tail))
+                            {
+                                return head.Capacity + tail.Capacity;
+                            }
+                        }
+                        else
+                        {
+                            lock (_crossSegmentLock)
+                            {
+                                if (head == _head && tail == _tail)
+                                {
+                                    int tailHead = Volatile.Read(ref tail._headAndTail.Head);
+                                    int tailTail = Volatile.Read(ref tail._headAndTail.Tail);
+                                    if (headHead == Volatile.Read(ref head._headAndTail.Head) &&
+                                        headTail == Volatile.Read(ref head._headAndTail.Tail) &&
+                                        tailHead == Volatile.Read(ref tail._headAndTail.Head) &&
+                                        tailTail == Volatile.Read(ref tail._headAndTail.Tail))
+                                    {
+                                        int capacity = head.Capacity + tail.Capacity;
+                                        for (ConcurrentQueueSegment<T> s = head._nextSegment; s != tail; s = s._nextSegment)
+                                        {
+                                            Debug.Assert(s._frozenForEnqueues, "Internal segment must be frozen as there's a following segment.");
+                                            capacity += s.Capacity;
+                                        }
+
+                                        return capacity;
+                                    }
+                                }
+                            }
+                        }
+
+                        spinner.SpinOnce();
+                    }
                 }
             }
         }
