@@ -58,7 +58,24 @@ namespace LocklessQueues
             m_items = new QueueSlot<T>[capacity];
             m_mask = capacity - 1;
 
-            Clear();
+            var index = 0;
+            foreach (var item in collection)
+            {
+                var tail = m_headAndTail.Tail;
+
+                // Increment tail.
+                m_headAndTail.Tail = tail + 1;
+
+                // Fill slot
+                m_items[index].Item = item;
+                m_items[index].SequenceNumber = tail + 1;
+
+                index++;
+            }
+
+            // Fill remaining sequence numbers.
+            for (; index < capacity; index++)
+                m_items[index].SequenceNumber = index;
         }
 
         /// <summary>
@@ -220,7 +237,7 @@ namespace LocklessQueues
                 item = m_items[index].Item;
 
                 // Zero out the slot.
-                m_items[head] = default;
+                m_items[index] = default;
 
                 // Update slot after reading
                 Volatile.Write(ref m_items[index].SequenceNumber, head + m_items.Length);
