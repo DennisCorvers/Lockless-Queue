@@ -18,6 +18,8 @@ The Concurrent Queue implementation is a copy of the .Net 5.0 implementation wit
     <Copyright>Copyright (c) 2021 Dennis Corvers</Copyright>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>https://github.com/DennisCorvers/Lockless-Queue/blob/master/LICENSE</PackageLicenseUrl>
+    <Version>1.0.1</Version>
+    <PackageTags>lockless lockfree concurrent queue CAS</PackageTags>
   </PropertyGroup>
 
 </Project>
