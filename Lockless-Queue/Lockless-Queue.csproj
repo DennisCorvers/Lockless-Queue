@@ -1,9 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Lockless_Queue</RootNamespace>
     <LangVersion>7.1</LangVersion>
+    <Authors>Dennis Corvers</Authors>
+    <RepositoryUrl>https://github.com/DennisCorvers/Lockless-Queue</RepositoryUrl>
+    <NeutralLanguage />
+    <Description>A collection of lockless, concurrent queues.
+
+The following queue implementations are present:
+
+SPSC Queue (Single Producer, Single Consumer).
+MPSC Queue (Multi Producer, Single Consumer).
+Concurrent Queue (Multi Producer, Multi Consumer).
+The Concurrent Queue implementation is a copy of the .Net 5.0 implementation with the added option for a fixed-size queue. This queue is lockless if/when it is instantiated as a fixed-size queue.</Description>
+    <Copyright>Copyright (c) 2021 Dennis Corvers</Copyright>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseUrl>https://github.com/DennisCorvers/Lockless-Queue/blob/master/LICENSE</PackageLicenseUrl>
   </PropertyGroup>
 
 </Project>

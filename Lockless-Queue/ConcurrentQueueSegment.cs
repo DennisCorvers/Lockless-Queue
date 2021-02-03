@@ -9,6 +9,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace LocklessQueues
@@ -73,7 +74,7 @@ namespace LocklessQueues
         /// to a value that maps to the same slot but that won't be confused with
         /// any other enqueue/dequeue sequence number.
         /// </remarks>
-        internal void EnsureFrozenForEnqueues() 
+        internal void EnsureFrozenForEnqueues()
         {
             if (!_frozenForEnqueues)
             {
@@ -274,6 +275,20 @@ namespace LocklessQueues
                 // Lost a race. Spin a bit, then try again.
                 spinner.SpinOnce();
             }
+        }
+
+        /// <summary>
+        /// Resets the current <see cref="ConcurrentQueueSegment{T}"/>. Should only be used when the <see cref="ConcurrentQueue{T}"/> has a fixed size!
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void Reset()
+        {
+            _headAndTail = new HeadAndTail();
+            _preservedForObservation = default;
+            _frozenForEnqueues = default;
+
+            for (int i = 0; i < _slots.Length; i++)
+                _slots[i].SequenceNumber = i;
         }
     }
 }

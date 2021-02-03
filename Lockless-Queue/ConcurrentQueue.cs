@@ -882,14 +882,19 @@ namespace LocklessQueues
             {
                 _tail.EnsureFrozenForEnqueues();
 
-                // Ensure the same capacity is retained when we are dealing with a fixedsize queue.
-                var segmentSize = InitialSegmentLength;
                 if (_fixedSize)
                 {
-                    segmentSize = _tail.Capacity;
-                }
+                    // No need to reallocate a QueueSegment when dealing with a fixed-size Queue.
+                    // The Head and Tail should always be the same in this case.
+                    System.Diagnostics.Debug.Assert(_tail == _head);
 
-                _tail = _head = new ConcurrentQueueSegment<T>(segmentSize);
+                    // Reset the sequence numbers of the Slots in our only QueueSegment.
+                    _head.Reset();
+                }
+                else
+                {
+                    _tail = _head = new ConcurrentQueueSegment<T>(InitialSegmentLength);
+                }
             }
         }
 
