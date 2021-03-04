@@ -175,10 +175,10 @@ namespace LocklessQueues
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<T>)this).GetEnumerator();
 
         /// <summary>
-        /// Attempts to add an object to the <see cref="Concurrent.IProducerConsumerCollection{T}"/>.
+        /// Attempts to add an object to the <see cref="IProducerConsumerCollection{T}"/>.
         /// </summary>
         /// <param name="item">The object to add to the <see
-        /// cref="Concurrent.IProducerConsumerCollection{T}"/>. The value can be a null
+        /// cref="IProducerConsumerCollection{T}"/>. The value can be a null
         /// reference (Nothing in Visual Basic) for reference types.
         /// </param>
         /// <returns>true if the object was added successfully; otherwise, false.</returns>
@@ -192,7 +192,7 @@ namespace LocklessQueues
         }
 
         /// <summary>
-        /// Attempts to remove and return an object from the <see cref="Concurrent.IProducerConsumerCollection{T}"/>.
+        /// Attempts to remove and return an object from the <see cref="IProducerConsumerCollection{T}"/>.
         /// </summary>
         /// <param name="item">
         /// When this method returns, if the operation was successful, <paramref name="item"/> contains the
@@ -820,7 +820,7 @@ namespace LocklessQueues
         /// </summary>
         /// <param name="result">
         /// When this method returns, <paramref name="result"/> contains an object from
-        /// the beginning of the <see cref="Concurrent.ConcurrentQueue{T}"/> or default(T)
+        /// the beginning of the <see cref="ConcurrentQueue{T}"/> or default(T)
         /// if the operation failed.
         /// </param>
         /// <returns>true if and object was returned successfully; otherwise, false.</returns>

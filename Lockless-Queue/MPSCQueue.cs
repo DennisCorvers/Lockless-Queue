@@ -9,6 +9,13 @@ using System.Threading;
 
 namespace LocklessQueues
 {
+    /// <summary>
+    /// Represents a thread-safe first-in, first-out collection of objects.
+    /// </summary>
+    /// <typeparam name="T">Specifies the type of elements in the queue.</typeparam>
+    /// <remarks>
+    /// Can be used with multiple producer threads and one consumer thread.
+    /// </remarks>
     [DebuggerDisplay("Count = {Count}")]
     [DebuggerTypeProxy(typeof(IProducerConsumerCollectionDebugView<>))]
     public class MPSCQueue<T> : IProducerConsumerCollection<T>, IReadOnlyCollection<T>
@@ -328,6 +335,9 @@ namespace LocklessQueues
             return i + 1;
         }
 
+        /// <summary>
+        /// Defines an enumerator for <see cref="MPSCQueue{T}"/>
+        /// </summary>
         public struct Enumerator : IEnumerator<T>, IEnumerator
         {
             // Enumerates over the provided MPSCRingBuffer. Enumeration counts as a READ/Consume operation.
@@ -351,12 +361,18 @@ namespace LocklessQueues
                 m_mask = queue.m_mask;
             }
 
+            /// <summary>
+            /// Disposes the enumerator.
+            /// </summary>
             public void Dispose()
             {
                 m_index = -2;
                 m_current = default;
             }
 
+            /// <summary>
+            /// Moves the enumerator to the next position.
+            /// </summary>
             public bool MoveNext()
             {
                 if (m_index == -2)
@@ -382,12 +398,18 @@ namespace LocklessQueues
                 return false;
             }
 
+            /// <summary>
+            /// Resets the enumerator.
+            /// </summary>
             public void Reset()
             {
                 m_index = -1;
                 m_current = default;
             }
 
+            /// <summary>
+            /// Gets the current object.
+            /// </summary>
             public T Current => m_current;
 
             object IEnumerator.Current => Current;
