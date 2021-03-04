@@ -1,6 +1,8 @@
 # Lockless-Queue
 A collection of lockless, concurrent queues.
 
+Available on NuGet via ```Install-Package Lockless-Queue```
+
 The following queue implementations are present:
 - SPSC Queue (Single Producer, Single Consumer).
 - MPSC Queue (Multi Producer, Single Consumer).
