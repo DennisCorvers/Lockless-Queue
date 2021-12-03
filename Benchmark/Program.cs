@@ -7,7 +7,7 @@ namespace Benchmark
     {
         static void Main(string[] args)
         {
-            BenchmarkRunner.Run<ConcurrentHashSetBenchmarks>();
+            BenchmarkRunner.Run<QueueBenchmarks>();
             Console.ReadLine();
         }
     }

@@ -7,22 +7,22 @@
     <Authors>Dennis Corvers</Authors>
     <RepositoryUrl>https://github.com/DennisCorvers/Lockless-Queue</RepositoryUrl>
     <NeutralLanguage />
-    <Description>A collection of lockless, concurrent queues.
+    <Description>A collection of concurrent collections
 
-The following queue implementations are present:
+The following collections are present:
 
+ConcurrentHashSet (based on .Net ConcurrentDictionary)
 SPSC Queue (Single Producer, Single Consumer).
 MPSC Queue (Multi Producer, Single Consumer).
-Concurrent Queue (Multi Producer, Multi Consumer).
-The Concurrent Queue implementation is a copy of the .Net 5.0 implementation with the added option for a fixed-size queue. This queue is lockless if/when it is instantiated as a fixed-size queue.</Description>
+Concurrent Queue (Multi Producer, Multi Consumer).</Description>
     <Copyright>Copyright (c) 2021 Dennis Corvers</Copyright>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>https://github.com/DennisCorvers/Lockless-Queue/blob/master/LICENSE</PackageLicenseUrl>
-    <Version>1.0.2</Version>
-    <PackageTags>lockless lockfree concurrent queue CAS</PackageTags>
-    <AssemblyVersion>1.0.2.0</AssemblyVersion>
-    <FileVersion>1.0.2.0</FileVersion>
-    <PackageReleaseNotes>Added XML comments to NuGet package</PackageReleaseNotes>
+    <Version>1.1.0</Version>
+    <PackageTags>lockless lockfree concurrent queue CAS concurrenthashset</PackageTags>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+    <PackageReleaseNotes>Added ConcurrentHashSet</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
