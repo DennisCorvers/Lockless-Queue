@@ -87,7 +87,7 @@ namespace LocklessQueuesTests
         {
             var q = new SPSCQueue<int>(16);
 
-            QueueTestSetup.SplitQueue(q);
+            TestSetup.SplitQueue(q);
 
             //Fill buffer to capacity.
             for (int i = 0; i < 6; i++)
@@ -104,7 +104,7 @@ namespace LocklessQueuesTests
             var q = new SPSCQueue<int>(16);
 
             //Inserts 10 items.
-            QueueTestSetup.SplitQueue(q);
+            TestSetup.SplitQueue(q);
 
             //Insert 6 more to fill the queue
             for (int i = 0; i < 6; i++)
@@ -139,7 +139,7 @@ namespace LocklessQueuesTests
             var q = new SPSCQueue<int>(10);
 
             //Inserts 10 items.
-            QueueTestSetup.SplitQueue(q);
+            TestSetup.SplitQueue(q);
 
             Assert.AreEqual(10, q.Count);
             q.Clear();
@@ -154,7 +154,7 @@ namespace LocklessQueuesTests
             var q = new SPSCQueue<int>(10);
 
             // Wrap tail around
-            QueueTestSetup.SplitQueue(q);
+            TestSetup.SplitQueue(q);
 
             // Iterator should start from the head.
             int num = 0;
@@ -174,7 +174,7 @@ namespace LocklessQueuesTests
         public void ToArrayTest()
         {
             var q = new SPSCQueue<int>(10);
-            QueueTestSetup.SplitQueue(q);
+            TestSetup.SplitQueue(q);
 
             var arr = q.ToArray();
 
@@ -188,7 +188,7 @@ namespace LocklessQueuesTests
         public void CopyToTest()
         {
             var q = new SPSCQueue<int>(10);
-            QueueTestSetup.SplitQueue(q);
+            TestSetup.SplitQueue(q);
 
             var arr = new int[15];
             q.CopyTo(arr, 5);

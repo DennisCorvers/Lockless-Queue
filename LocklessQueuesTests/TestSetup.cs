@@ -1,11 +1,12 @@
-﻿using System;
+﻿using LocklessQueue.Sets;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 
 namespace LocklessQueuesTests
 {
-    internal class QueueTestSetup
+    internal class TestSetup
     {
         internal static void SplitQueue(IProducerConsumerCollection<int> q)
         {
@@ -29,6 +30,12 @@ namespace LocklessQueuesTests
 
             if (q.Count < 10)
                 throw new ArgumentException("Queue needs to have a capacity of at least 10.");
+        }
+
+        internal static void PopulateHashSet(ConcurrentHashSet<int> set, int count)
+        {
+            for (int i = 0; i < count; i++)
+                set.TryAdd(i);
         }
     }
 

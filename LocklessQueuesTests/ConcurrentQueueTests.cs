@@ -147,7 +147,7 @@ namespace LocklessQueuesTests
         {
             var q = new ConcurrentQueue<int>(16, false);
 
-            QueueTestSetup.SplitQueue(q);
+            TestSetup.SplitQueue(q);
 
             // Fill buffer beyond capacity
             for (int i = 0; i < 100;)
@@ -183,7 +183,7 @@ namespace LocklessQueuesTests
             var q = new ConcurrentQueue<int>(16, true);
 
             //Inserts 10 items.
-            QueueTestSetup.SplitQueue(q);
+            TestSetup.SplitQueue(q);
 
             //Insert 6 more to fill the queue
             for (int i = 0; i < 6; i++)
@@ -212,7 +212,7 @@ namespace LocklessQueuesTests
             var q = new ConcurrentQueue<int>();
 
             //Inserts 10 items.
-            QueueTestSetup.SplitQueue(q);
+            TestSetup.SplitQueue(q);
 
             Assert.AreEqual(10, q.Count);
             q.Clear();
@@ -228,7 +228,7 @@ namespace LocklessQueuesTests
             var q = new ConcurrentQueue<int>(size, true);
 
             //Inserts 10 items.
-            QueueTestSetup.SplitQueue(q);
+            TestSetup.SplitQueue(q);
 
             Assert.AreEqual(10, q.Count);
             Assert.AreEqual(size, q.Capacity);
@@ -285,7 +285,7 @@ namespace LocklessQueuesTests
             var q = new ConcurrentQueue<int>(10, false);
 
             // Wrap tail around
-            QueueTestSetup.SplitQueue(q);
+            TestSetup.SplitQueue(q);
 
             for (int i = 10; i < 50; i++)
                 q.Enqueue(i);
