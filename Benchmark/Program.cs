@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
-using LocklessQueues;
+using LocklessQueue.Queues;
 using System;
 using System.Collections.Generic;
 using SysConcurrentQueue = System.Collections.Concurrent.ConcurrentQueue<long>;

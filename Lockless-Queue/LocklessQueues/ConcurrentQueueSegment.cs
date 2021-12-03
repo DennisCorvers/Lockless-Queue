@@ -12,7 +12,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
-namespace LocklessQueues
+namespace LocklessQueue.Queues
 {
     [DebuggerDisplay("Capacity = {Capacity}")]
     internal sealed class ConcurrentQueueSegment<T>
@@ -35,8 +35,8 @@ namespace LocklessQueues
         internal ConcurrentQueueSegment(int boundedLength)
         {
             // Validate the length
-            Debug.Assert(boundedLength >= 2, $"Must be >= 2, got {boundedLength}");
-            Debug.Assert((boundedLength & (boundedLength - 1)) == 0, $"Must be a power of 2, got {boundedLength}");
+            System.Diagnostics.Debug.Assert(boundedLength >= 2, $"Must be >= 2, got {boundedLength}");
+            System.Diagnostics.Debug.Assert((boundedLength & (boundedLength - 1)) == 0, $"Must be a power of 2, got {boundedLength}");
 
             // Initialize the slots and the mask.  The mask is used as a way of quickly doing "% _slots.Length",
             // instead letting us do "& _slotsMask".

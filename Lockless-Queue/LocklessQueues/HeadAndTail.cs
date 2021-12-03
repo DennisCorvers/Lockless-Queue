@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Text;
 
-namespace LocklessQueues
+namespace LocklessQueue.Queues
 {
     [StructLayout(LayoutKind.Explicit, Size = 3 * CACHE_LINE_SIZE)]
     [DebuggerDisplay("Head = {Head}, Tail = {Tail}")]

@@ -8,7 +8,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using LocklessQueues.QDebug;
+using LocklessQueue.Debug;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 
-namespace LocklessQueues
+namespace LocklessQueue.Queues
 {
     /// <summary>
     /// Represents a thread-safe first-in, first-out collection of objects.
@@ -339,7 +339,7 @@ namespace LocklessQueues
                                     // dequeueing and enqueueing can only be done from the head and tail segments, which these aren't.
                                     for (ConcurrentQueueSegment<T> s = head._nextSegment; s != tail; s = s._nextSegment)
                                     {
-                                        Debug.Assert(s._frozenForEnqueues, "Internal segment must be frozen as there's a following segment.");
+                                        System.Diagnostics.Debug.Assert(s._frozenForEnqueues, "Internal segment must be frozen as there's a following segment.");
                                         count += s._headAndTail.Tail - s.FreezeOffset;
                                     }
 
@@ -423,7 +423,7 @@ namespace LocklessQueues
                                         int capacity = head.Capacity + tail.Capacity;
                                         for (ConcurrentQueueSegment<T> s = head._nextSegment; s != tail; s = s._nextSegment)
                                         {
-                                            Debug.Assert(s._frozenForEnqueues, "Internal segment must be frozen as there's a following segment.");
+                                            System.Diagnostics.Debug.Assert(s._frozenForEnqueues, "Internal segment must be frozen as there's a following segment.");
                                             capacity += s.Capacity;
                                         }
 

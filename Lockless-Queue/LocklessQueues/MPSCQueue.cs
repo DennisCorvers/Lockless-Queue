@@ -1,13 +1,12 @@
-﻿using LocklessQueues.QDebug;
+﻿using LocklessQueue.Debug;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Threading;
 
-namespace LocklessQueues
+namespace LocklessQueue.Queues
 {
     /// <summary>
     /// Represents a thread-safe first-in, first-out collection of objects.

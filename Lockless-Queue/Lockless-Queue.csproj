@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Lockless_Queue</RootNamespace>
-    <LangVersion>7.1</LangVersion>
+    <LangVersion>9</LangVersion>
     <Authors>Dennis Corvers</Authors>
     <RepositoryUrl>https://github.com/DennisCorvers/Lockless-Queue</RepositoryUrl>
     <NeutralLanguage />
