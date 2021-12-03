@@ -130,7 +130,7 @@ namespace LocklessQueue.Sets
 
                 if (!TryAddInternal(key, null, acquireLock: false))
                 {
-                    throw new ArgumentException("Key already present.");
+                    ThrowOnDuplicateKey(key);
                 }
             }
 
@@ -220,7 +220,7 @@ namespace LocklessQueue.Sets
         /// <param name="key">The key of the element to remove and return.</param>
         /// <returns>true if an object was removed successfully; otherwise, false.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="key"/> is a null reference (Nothing in Visual Basic).</exception>
-        public bool TryRemove(TKey key)
+        public bool Remove(TKey key)
         {
             if (key == null)
             {
@@ -695,9 +695,6 @@ namespace LocklessQueue.Sets
             }
         }
 
-        private static void ThrowKeyNotFoundException(TKey key)
-            => throw new KeyNotFoundException($"Key not found: {key}.");
-
         /// <summary>
         /// Gets the <see cref="IEqualityComparer{TKey}" />
         /// that is used to determine equality of keys for the hashset.
@@ -789,39 +786,6 @@ namespace LocklessQueue.Sets
         }
 
         /// <summary>
-        /// Adds a key to the <see cref="ConcurrentHashSet{TKey}"/> if the key does not already
-        /// exist.
-        /// </summary>
-        /// <param name="key">The key to be added or whose value should be updated</param>
-        /// <exception cref="ArgumentNullException"><paramref name="key"/> is a null reference
-        /// (Nothing in Visual Basic).</exception>
-        /// <exception cref="OverflowException">The hashset contains too many
-        /// elements.</exception>
-        public bool Add(TKey key)
-        {
-            if (key is null)
-            {
-                ThrowIfKeyNull();
-            }
-
-            IEqualityComparer<TKey> comparer = _comparer;
-            int hashcode = comparer is null ? key.GetHashCode() : comparer.GetHashCode(key);
-
-            while (true)
-            {
-                if (ContainsKeyInternal(key, hashcode))
-                {
-                    return false;
-                }
-                else
-                {
-                    // key doesn't exist, try to add
-                    return TryAddInternal(key, hashcode, acquireLock: true);
-                }
-            }
-        }
-
-        /// <summary>
         /// Gets a value that indicates whether the <see cref="ConcurrentHashSet{TKey}"/> is empty.
         /// </summary>
         /// <value>true if the <see cref="ConcurrentHashSet{TKey}"/> is empty; otherwise,
@@ -863,7 +827,7 @@ namespace LocklessQueue.Sets
         {
             if (!TryAdd(key))
             {
-                throw new ArgumentException("Key already exists.");
+                ThrowOnDuplicateKey(key);
             }
         }
 
@@ -874,7 +838,7 @@ namespace LocklessQueue.Sets
             => false;
 
         bool ICollection<TKey>.Remove(TKey key) =>
-            TryRemove(key);
+            Remove(key);
 
         IEnumerator IEnumerable.GetEnumerator()
             => GetEnumerator();
@@ -1094,7 +1058,10 @@ namespace LocklessQueue.Sets
         }
 
         private static void ThrowIfKeyNull()
-            => new ArgumentNullException("Key may not be null.");
+            => throw new ArgumentNullException("Key may not be null.");
+
+        private static void ThrowOnDuplicateKey(TKey key)
+            => throw new ArgumentException($"An item with the same key has already been added. Key: {key}");
 
         /// <summary>
         /// A node in a singly-linked list representing a particular hash table bucket.
