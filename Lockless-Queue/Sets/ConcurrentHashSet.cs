@@ -196,11 +196,11 @@ namespace LocklessQueue.Sets
         }
 
         /// <summary>
-        /// Attempts to add the specified key and value to the <see cref="ConcurrentHashSet{TKey}"/>.
+        /// Adds the specified key to the <see cref="ConcurrentHashSet{TKey}"/>.
         /// </summary>
         /// <param name="key">The key of the element to add.</param>
         /// <returns>
-        /// true if the key/value pair was added to the <see cref="ConcurrentHashSet{TKey}"/> successfully; otherwise, false.
+        /// true if the key pair was added to the <see cref="ConcurrentHashSet{TKey}"/> successfully; otherwise, false.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="key"/> is null reference (Nothing in Visual Basic).</exception>
         /// <exception cref="OverflowException">The <see cref="ConcurrentHashSet{TKey}"/> contains too many elements.</exception>
@@ -215,12 +215,46 @@ namespace LocklessQueue.Sets
         }
 
         /// <summary>
-        /// Attempts to remove the key from the <see cref="ConcurrentHashSet{TKey}"/>.
+        /// Attempts to add the specified key to the <see cref="ConcurrentHashSet{TKey}"/>.
+        /// </summary>
+        /// <param name="key">The key of the element to add.</param>
+        /// <returns>
+        /// true if the key pair was added to the <see cref="ConcurrentHashSet{TKey}"/> successfully; otherwise, false.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="key"/> is null reference (Nothing in Visual Basic).</exception>
+        /// <exception cref="ArgumentException">The <see cref="ConcurrentHashSet{TKey}"/> already contains the key.</exception>
+        /// <exception cref="OverflowException">The <see cref="ConcurrentHashSet{TKey}"/> contains too many elements.</exception>
+        public void Add(TKey key)
+        {
+            if (!TryAdd(key))
+            {
+                ThrowOnDuplicateKey(key);
+            }
+        }
+
+        /// <summary>
+        /// Removes the key from the <see cref="ConcurrentHashSet{TKey}"/>.
         /// </summary>
         /// <param name="key">The key of the element to remove and return.</param>
         /// <returns>true if an object was removed successfully; otherwise, false.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="key"/> is a null reference (Nothing in Visual Basic).</exception>
         public bool Remove(TKey key)
+        {
+            if (key == null)
+            {
+                ThrowIfKeyNull();
+            }
+
+            return TryRemoveInternal(key);
+        }
+
+        /// <summary>
+        /// Attempts to remove the key from the <see cref="ConcurrentHashSet{TKey}"/>.
+        /// </summary>
+        /// <param name="key">The key of the element to remove and return.</param>
+        /// <returns>true if an object was removed successfully; otherwise, false.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="key"/> is a null reference (Nothing in Visual Basic).</exception>
+        public bool TryRemove(TKey key)
         {
             if (key == null)
             {
