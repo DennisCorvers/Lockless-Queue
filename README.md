@@ -3,7 +3,7 @@ A collection of concurrent collections.
 
 Available on NuGet via ```Install-Package Lockless-Queue```
 
-The following queue implementations are present:
+The following collections are present:
 - ConcurrentHashSet (based on .Net ConcurrentDictionary)
 - SPSC Queue (Single Producer, Single Consumer).
 - MPSC Queue (Multi Producer, Single Consumer).
