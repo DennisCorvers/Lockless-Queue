@@ -17,7 +17,7 @@
 mono_crash.*
 
 # Build results
-[Dd]ebug/
+[Dd]ebug/*
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
@@ -30,6 +30,9 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+
+## Include Debug folder/namespace in project
+!Lockless-Queue/Debug
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

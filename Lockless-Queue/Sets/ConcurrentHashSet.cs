@@ -14,7 +14,7 @@ namespace LocklessQueue.Sets
     /// All public and protected members of <see cref="ConcurrentHashSet{TKey}"/> are thread-safe and may be used
     /// concurrently from multiple threads.
     /// </remarks>
-    [DebuggerTypeProxy(typeof(IHashSetDebugView<>))]
+    [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
     public class ConcurrentHashSet<TKey> : ICollection<TKey>, IReadOnlyCollection<TKey>
         where TKey : notnull
