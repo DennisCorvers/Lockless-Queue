@@ -1,5 +1,5 @@
 # LocklessQueue
-A collection of concurrent collections.
+A collection of concurrent collections that are not found in the .Net framework.
 
 Available on NuGet via ```Install-Package Lockless-Queue```
 
