@@ -18,11 +18,11 @@ Concurrent Queue (Multi Producer, Multi Consumer).</Description>
     <Copyright>Copyright (c) 2021 Dennis Corvers</Copyright>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>https://github.com/DennisCorvers/Lockless-Queue/blob/master/LICENSE</PackageLicenseUrl>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <PackageTags>lockless lockfree concurrent queue CAS concurrenthashset</PackageTags>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
-    <PackageReleaseNotes>Added ConcurrentHashSet</PackageReleaseNotes>
+    <AssemblyVersion>1.1.1.0</AssemblyVersion>
+    <FileVersion>1.1.1.0</FileVersion>
+    <PackageReleaseNotes>Include DebugViews</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup>
