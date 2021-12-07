@@ -28,7 +28,7 @@ namespace LocklessQueue.Queues
     /// </remarks>
     [DebuggerDisplay("Count = {Count}")]
     [DebuggerTypeProxy(typeof(IProducerConsumerCollectionDebugView<>))]
-    public class ConcurrentQueue<T> : IProducerConsumerCollection<T>, IReadOnlyCollection<T>
+    public class ConcurrentQueue<T> : IProducerConsumerCollection<T>, IReadOnlyCollection<T>, IProducerConsumerQueue<T>
     {
         private const int InitialSegmentLength = 32;
         private const int MaxSegmentLength = 1024 * 1024;
@@ -158,21 +158,21 @@ namespace LocklessQueue.Queues
         /// <value>true if access to the <see cref="ICollection"/> is synchronized
         /// with the SyncRoot; otherwise, false. For <see cref="ConcurrentQueue{T}"/>, this property always
         /// returns false.</value>
-        bool ICollection.IsSynchronized => false;
+        bool ICollection.IsSynchronized 
+            => false;
 
         /// <summary>
         /// Gets an object that can be used to synchronize access to the <see
         /// cref="ICollection"/>. This property is not supported.
         /// </summary>
         /// <exception cref="NotSupportedException">The SyncRoot property is not supported.</exception>
-        object ICollection.SyncRoot
-        {
-            get => throw new NotSupportedException();
-        }
+        object ICollection.SyncRoot 
+            => throw new NotSupportedException();
 
         /// <summary>Returns an enumerator that iterates through a collection.</summary>
         /// <returns>An <see cref="IEnumerator"/> that can be used to iterate through the collection.</returns>
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<T>)this).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() 
+            => ((IEnumerable<T>)this).GetEnumerator();
 
         /// <summary>
         /// Attempts to add an object to the <see cref="IProducerConsumerCollection{T}"/>.
@@ -202,7 +202,8 @@ namespace LocklessQueue.Queues
         /// <remarks>For <see cref="ConcurrentQueue{T}"/>, this operation will attempt to remove the object
         /// from the beginning of the <see cref="ConcurrentQueue{T}"/>.
         /// </remarks>
-        bool IProducerConsumerCollection<T>.TryTake(out T item) => TryDequeue(out item);
+        bool IProducerConsumerCollection<T>.TryTake(out T item) 
+            => TryDequeue(out item);
 
         /// <summary>
         /// Gets a value that indicates whether the <see cref="ConcurrentQueue{T}"/> is empty.
@@ -438,6 +439,12 @@ namespace LocklessQueue.Queues
                 }
             }
         }
+
+        bool IProducerQueue<T>.IsMultiProducer 
+            => true;
+
+        bool IConsumerQueue<T>.IsMultiConsumer 
+            => true;
 
         private static int GetCount(ConcurrentQueueSegment<T> s, int head, int tail)
         {

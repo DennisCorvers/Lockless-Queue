@@ -18,7 +18,7 @@ namespace LocklessQueue.Queues
     /// </remarks>
     [DebuggerDisplay("Count = {Count}")]
     [DebuggerTypeProxy(typeof(IProducerConsumerCollectionDebugView<>))]
-    public class SPSCQueue<T> : IProducerConsumerCollection<T>, IReadOnlyCollection<T>
+    public class SPSCQueue<T> : IProducerConsumerCollection<T>, IReadOnlyCollection<T>, IProducerConsumerQueue<T>
     {
         private T[] m_items;
         private HeadAndTail m_headAndTail;
@@ -101,23 +101,22 @@ namespace LocklessQueue.Queues
         }
 
         bool ICollection.IsSynchronized
-        {
-            get { return false; }
-        }
+            => false;
+
         object ICollection.SyncRoot
-        {
-            get { throw new NotSupportedException("The SyncRoot property may not be used for the synchronization of concurrent collections."); }
-        }
+            => throw new NotSupportedException("The SyncRoot property may not be used for the synchronization of concurrent collections.");
+
+        bool IProducerQueue<T>.IsMultiProducer
+            => false;
+
+        bool IConsumerQueue<T>.IsMultiConsumer
+            => false;
 
         bool IProducerConsumerCollection<T>.TryAdd(T item)
-        {
-            return TryEnqueue(item);
-        }
+            => TryEnqueue(item);
 
-        bool IProducerConsumerCollection<T>.TryTake(out T item)
-        {
-            return TryDequeue(out item);
-        }
+        bool IProducerConsumerCollection<T>.TryTake(out T item) 
+            => TryDequeue(out item);
 
         void ICollection.CopyTo(Array array, int index)
         {
