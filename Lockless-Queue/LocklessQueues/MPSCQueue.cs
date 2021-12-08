@@ -1,4 +1,5 @@
 ﻿using LocklessQueue.Debug;
+using LocklessQueue.Utils;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -40,7 +41,7 @@ namespace LocklessQueue.Queues
             if (capacity < 1)
                 throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "Capacity must be greater than zero.");
 
-            capacity = RoundUpToPowerOf2(capacity);
+            capacity = MathUtils.RoundUpToPowerOf2(capacity);
             m_items = new QueueSlot<T>[capacity];
             m_mask = capacity - 1;
 
@@ -60,7 +61,7 @@ namespace LocklessQueue.Queues
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
 
-            var capacity = RoundUpToPowerOf2(collection.Count);
+            var capacity = MathUtils.RoundUpToPowerOf2(collection.Count);
             m_items = new QueueSlot<T>[capacity];
             m_mask = capacity - 1;
 
@@ -319,18 +320,6 @@ namespace LocklessQueue.Queues
             int i = 0;
             while (iterator.MoveNext() && i < count)
                 array[i++ + index] = iterator.Current;
-        }
-
-        private static int RoundUpToPowerOf2(int i)
-        {
-            // Based on https://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
-            --i;
-            i |= i >> 1;
-            i |= i >> 2;
-            i |= i >> 4;
-            i |= i >> 8;
-            i |= i >> 16;
-            return i + 1;
         }
 
         /// <summary>
