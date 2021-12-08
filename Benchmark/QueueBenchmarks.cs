@@ -10,7 +10,7 @@ namespace Benchmark
     {
         const int COUNT = 128;
 
-        readonly ConcurrentQueue<long> _concurrentQueue;
+        readonly MPMCQueue<long> _mpmcQueue;
         readonly SysConcurrentQueue _systemConcurrentQueue;
         readonly MPSCQueue<long> _mpscQueue;
         readonly SPSCQueue<long> _spscQueue;
@@ -18,7 +18,7 @@ namespace Benchmark
 
         public QueueBenchmarks()
         {
-            _concurrentQueue = new ConcurrentQueue<long>(COUNT, true);
+            _mpmcQueue = new MPMCQueue<long>(COUNT);
             _systemConcurrentQueue = new SysConcurrentQueue();
             _mpscQueue = new MPSCQueue<long>(COUNT);
             _spscQueue = new SPSCQueue<long>(COUNT);
@@ -26,16 +26,16 @@ namespace Benchmark
         }
 
         [Benchmark]
-        public void ConcurrentQueue()
+        public void MPMCQueue()
         {
             // ADD values
             for (int i = 0; i < COUNT; i++)
-                _concurrentQueue.TryEnqueue(i);
+                _mpmcQueue.TryEnqueue(i);
 
             for (int i = 0; i < COUNT; i++)
-                _concurrentQueue.TryDequeue(out long result);
+                _mpmcQueue.TryDequeue(out long result);
 
-            _concurrentQueue.Clear();
+            _mpmcQueue.Clear();
         }
 
         [Benchmark]

@@ -1,4 +1,5 @@
-﻿using LocklessQueue.Sets;
+﻿using LocklessQueue.Queues;
+using LocklessQueue.Sets;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -25,6 +26,30 @@ namespace LocklessQueuesTests
             //Second half (head and tail are now both 5)
             for (int i = 5; i < 10; i++)
                 q.TryAdd(i);
+
+            //Circular buffer now "ends" in the middle of the underlying array
+
+            if (q.Count < 10)
+                throw new ArgumentException("Queue needs to have a capacity of at least 10.");
+        }
+
+        internal static void SplitQueue(MPMCQueue<int> q)
+        {
+            //Wrap tail back to 0
+            for (int i = 0; i < 5; i++)
+                q.TryEnqueue(111);
+
+            //First half
+            for (int i = 0; i < 5; i++)
+                q.TryEnqueue(i);
+
+            //Move head by 5
+            for (int i = 0; i < 5; i++)
+                q.TryDequeue(out int _);
+
+            //Second half (head and tail are now both 5)
+            for (int i = 5; i < 10; i++)
+                q.TryEnqueue(i);
 
             //Circular buffer now "ends" in the middle of the underlying array
 
