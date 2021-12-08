@@ -7,25 +7,23 @@ The following collections are present:
 - ConcurrentHashSet (based on .Net ConcurrentDictionary)
 - SPSC Queue (Single Producer, Single Consumer).
 - MPSC Queue (Multi Producer, Single Consumer).
-- Concurrent Queue (Multi Producer, Multi Consumer).
-
-The Concurrent Queue implementation is a **copy** of the .Net 5.0 implementation with the added option for a fixed-size queue. This queue is lockless if/when it is instantiated as a fixed-size queue.
+- MPMC Queue (Multi Producer, Multi Consumer).
 
 ## Benchmarks
 All benchmarks are run in a .Net 5.0 environment.
 
 ### Queues
-SysConcurrentQueue and Queue are the built-in .Net types. Where possible, a fixed-size queue has been used.
+ConcurrentQueue and Queue are the built-in .Net types.
 
 The following Benchmarks execute Enqueueing 128 items, Dequeueing 128 items and finally clearing the Queue. The same methods are used for each queue where available. All Queue benchmarks are run in a single-threaded environment to demonstrate the "raw" throughput of each queue.
 
-|             Method |       Mean |    Error |   StdDev |  Gen 0 |  Gen 1 | Gen 2 | Allocated |
-|------------------- |-----------:|---------:|---------:|-------:|-------:|------:|----------:|
-|    ConcurrentQueue | 2,473.3 ns |  2.27 ns |  2.01 ns |      - |      - |     - |         - |
-| SysConcurrentQueue | 2,860.0 ns | 16.30 ns | 15.24 ns | 0.5188 | 0.0076 |     - |    4352 B |
-|          MPSCQueue | 1,612.5 ns |  1.87 ns |  1.75 ns |      - |      - |     - |         - |
-|          SPSCQueue |   562.1 ns |  4.05 ns |  3.78 ns |      - |      - |     - |         - |
-|              Queue |   612.5 ns |  1.33 ns |  1.24 ns |      - |      - |     - |         - |
+|             Method |       Mean |   Error |  StdDev |  Gen 0 |  Gen 1 | Gen 2 | Allocated |
+|------------------- |-----------:|--------:|--------:|-------:|-------:|------:|----------:|
+|          MPMCQueue | 2,353.5 ns | 2.55 ns | 2.39 ns |      - |      - |     - |         - |
+| SysConcurrentQueue | 2,860.8 ns | 7.00 ns | 6.21 ns | 0.5188 | 0.0076 |     - |    4352 B |
+|          MPSCQueue | 1,619.6 ns | 9.52 ns | 8.91 ns |      - |      - |     - |         - |
+|          SPSCQueue |   555.9 ns | 1.39 ns | 1.23 ns |      - |      - |     - |         - |
+|              Queue |   625.1 ns | 1.95 ns | 1.82 ns |      - |      - |     - |         - |
 
 ### HashSet
 A comparison is made between the ConcurrentDictionary (when using a byte as value) and the ConcurrentHashSet implementation.
